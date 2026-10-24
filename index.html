@@ -266,13 +266,13 @@ function minutiView(){
     const og=golBy(m,'og');
     const when=x=>[x.tempo?x.tempo+'° t.':'',x.min?x.min+'′':''].filter(Boolean).join(' ')||'—';
     const golTimes=pid=>golOf(m).filter(x=>x.pid===pid).map(when).join(', ');
-    return `<details class="panel"><summary>${esc(fmtDate(m.date,{day:'numeric',month:'short'}))} · vs ${esc(m.opponent||'')} · ${esc(sc.gf)}–${esc(sc.gs)}${m.ended?'':' <span class="chip away">in corso</span>'}</summary>
+    return `<details class="panel"><summary>${esc(fmtDate(m.date,{day:'numeric',month:'short'}))} · vs ${esc(m.opponent||'')} · ${esc(sc.gf)}–${esc(sc.gs)}${m.ended?'':` <span class="chip away" role="button" tabindex="0" data-act="openMatch" data-id="${m.id}" style="cursor:pointer">in corso ›</span>`}</summary>
     ${t.length?`<div class="tempi" style="margin-top:8px">${t.map((x,i)=>`<span>${i+1}° tempo · ${x.end==null?'in corso':mmss(x.end-x.start)}</span>`).join('')}</div>`:''}
     <div class="tablewrap"><table><thead><tr><th>Ragazzo</th><th>Minuti</th><th>Gol</th></tr></thead><tbody>
     ${kids.map(p=>{const g=golBy(m,p.id);return `<tr><td>${esc(p.name)}</td><td>${mins(playedSec(m,p.id))}′</td><td>${g?`⚽ ${g}<div class="note">${esc(golTimes(p.id))}</div>`:'–'}</td></tr>`}).join('')}
     ${og?`<tr><td class="muted">Autoreti a favore</td><td></td><td>${og}<div class="note">${esc(golTimes('og'))}</div></td></tr>`:''}
     </tbody></table></div>
-    ${golOf(m).length?`<div class="eyebrow" style="margin-top:10px">Cronologia gol</div><div class="list" style="margin-top:6px">${golOf(m).map(x=>`<div class="spread"><span>⚽ ${esc(x.pid==='og'?'Autorete a favore':((P(x.pid)||{}).name||'—'))}</span><span class="note">${esc(when(x))}</span></div>`).join('')}</div>`:''}</details>`};
+    ${golOf(m).length?`<div class="eyebrow" style="margin-top:10px">Cronologia gol</div><div class="list" style="margin-top:6px">${golOf(m).map(x=>`<div class="spread"><span>⚽ ${esc(x.pid==='og'?'Autorete a favore':((P(x.pid)||{}).name||'—'))}</span><span class="note">${esc(when(x))}</span></div>`).join('')}</div>`:''}<button class="small" data-act="openMatch" data-id="${m.id}" style="margin-top:10px">Apri la partita ›</button></details>`};
   return `<div class="spread" style="margin-bottom:6px"><h2>Statistiche</h2><span class="note">media ${Math.round(avg)}′ a ragazzo</span></div>
   <p class="note" style="margin:0 0 12px">In arancione chi è sotto la metà della media: utile per distribuire il tempo di gioco.</p>
   <div class="panel tablewrap"><table><thead><tr><th>Ragazzo</th><th>Conv.</th><th>Pres.</th><th>Minuti</th><th>Media</th><th>Gol</th></tr></thead><tbody>
