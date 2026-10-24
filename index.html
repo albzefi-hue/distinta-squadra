@@ -1,0 +1,493 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Distinta Squadra</title><meta name="theme-color" content="#1d6a43"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: clipboard-style team sheet, one column on phone, tab bar at the bottom */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --line:#d9e0d6; --fg:#16211a; --muted:#5d6b61;
+  --pitch:#1d6a43; --pitch-ink:#ffffff; --pitch-soft:#e2efe6;
+  --bib:#e8742a; --bib-soft:#fde9db; --warn:#b4471b;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1511; --surface:#18211b; --line:#2b372f; --fg:#e7eee8; --muted:#97a69b;
+  --pitch:#3fae74; --pitch-ink:#08130c; --pitch-soft:#1c3226;
+  --bib:#f08a45; --bib-soft:#3a2416; --warn:#f2895c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1511; --surface:#18211b; --line:#2b372f; --fg:#e7eee8; --muted:#97a69b;
+  --pitch:#3fae74; --pitch-ink:#08130c; --pitch-soft:#1c3226;
+  --bib:#f08a45; --bib-soft:#3a2416; --warn:#f2895c; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:12px 96px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-block:8px 14px;border-bottom:2px solid var(--fg);margin-bottom:16px}
+h1{font-family:var(--display);font-weight:800;font-size:2rem;letter-spacing:.01em;text-transform:uppercase;margin:0;line-height:1}
+h2{font-family:var(--display);font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.03em;margin:0;text-wrap:balance}
+.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.stack{display:grid;gap:12px}
+button,.btn{font:inherit;font-weight:600;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--bib);outline-offset:2px}
+.primary{background:var(--pitch);color:var(--pitch-ink);border-color:var(--pitch)}
+.ghost{background:transparent;border-color:transparent;padding-inline:8px}
+.danger{color:var(--warn)}
+.small{min-height:32px;padding:5px 10px;font-size:.85rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.list{display:grid;gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;cursor:pointer;text-align:left;width:100%}
+.item .grow{flex:1;min-width:0}
+.item .title{font-weight:700}
+.item .sub{color:var(--muted);font-size:.86rem;overflow-wrap:anywhere}
+.datebox{width:52px;flex:none;text-align:center;border-right:1px dashed var(--line);padding-right:10px}
+.datebox b{display:block;font-family:var(--display);font-size:1.7rem;line-height:1}
+.datebox span{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.chip{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:var(--pitch-soft);color:var(--pitch)}
+.chip.away{background:var(--bib-soft);color:var(--bib)}
+.chip.ex{background:transparent;border:1px dashed var(--muted);color:var(--muted)}
+.num{font-family:var(--display);font-weight:700;font-size:1.25rem;width:34px;height:34px;flex:none;border-radius:8px;display:grid;place-items:center;background:var(--fg);color:var(--bg);font-variant-numeric:tabular-nums}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.tabs button{border:0;border-radius:0;background:transparent;flex-direction:column;gap:2px;font-size:.76rem;color:var(--muted);min-height:58px;justify-content:center}
+.tabs button svg{width:22px;height:22px}
+.tabs button[aria-current="true"]{color:var(--pitch);box-shadow:inset 0 3px 0 var(--pitch)}
+.section{display:grid;gap:10px;margin-block:18px}
+.section > .spread{border-bottom:1px solid var(--line);padding-bottom:6px}
+.check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--pitch)}
+.check.on{border-color:var(--pitch);background:var(--pitch-soft)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.clock{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--fg);color:var(--bg);border-radius:14px;padding:12px 16px;flex-wrap:wrap}
+.clock .t{font-family:var(--display);font-weight:800;font-size:2.8rem;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.clock button{background:transparent;color:var(--bg);border-color:color-mix(in srgb,var(--bg) 40%,transparent)}
+.clock button.go{background:var(--bib);border-color:var(--bib);color:#1a0d04}
+.player{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.player.in{border-color:var(--bib);background:var(--bib-soft)}
+.player .grow{flex:1;min-width:0}
+.player .min{font-family:var(--display);font-weight:700;font-size:1.3rem;font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+.toggle{min-width:84px;justify-content:center}
+.player.in .toggle{background:var(--bib);border-color:var(--bib);color:#1a0d04}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--pitch);border-radius:99px}
+.bar.low i{background:var(--bib)}
+.goalrow{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.ball{font-weight:700;color:var(--pitch);font-variant-numeric:tabular-nums}
+.tempi{display:flex;gap:6px;flex-wrap:wrap}
+.tempi span{font-size:.8rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface);font-variant-numeric:tabular-nums}
+.tempi span.now{border-color:var(--bib);background:var(--bib-soft)}
+.clock .sub2{font-size:.85rem;opacity:.75;font-variant-numeric:tabular-nums;min-height:1.2em}
+.clock .btns{display:flex;gap:8px;flex-wrap:wrap}
+.scorebig{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+details.panel summary{cursor:pointer;font-weight:600}
+details.panel table{margin-top:8px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.9rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.empty{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;display:grid;gap:10px;justify-items:center}
+.score{display:flex;align-items:center;gap:8px}
+.score input{width:64px;text-align:center;font-family:var(--display);font-size:1.6rem;font-weight:700}
+.overlay{position:fixed;inset:0;background:color-mix(in srgb,#000 45%,transparent);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+@media (min-width:640px){.overlay{align-items:center}.sheet{border-radius:18px}}
+label.f{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:90px;resize:vertical}
+.toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:30;max-width:90%}
+pre.msg{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;font-family:var(--body);font-size:.88rem;margin:0;user-select:all}
+.note{font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.item,.check,.player{transition:border-color .15s,background .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div><div class="eyebrow" id="season">Stagione</div><h1>Distinta</h1></div>
+    <span class="note" id="mode"></span>
+  </header>
+  <main id="view"><p class="muted">Caricamento…</p></main>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="partite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Partite</button>
+  <button data-tab="rosa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3c0 2-2 3-4 3s-4-1-4-3z"/></svg>Rosa</button>
+  <button data-tab="campi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Campi</button>
+  <button data-tab="minuti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Statistiche</button>
+</nav>
+<div id="modal"></div>
+
+<script>
+window.SEED={"players": [{"id": "p-pozzi", "name": "Pozzi Enea", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-marku", "name": "Marku Gabriele", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-pagnoncelli", "name": "Pagnoncelli Gabriele", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-riva", "name": "Riva Jacopo", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-zefi", "name": "Zefi Manuel", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-xhepa", "name": "Xhepa Mattia", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}, {"id": "p-serigne", "name": "Serigne Saliou", "number": "", "role": "", "parent": "", "phone": "", "year": "2018", "example": false}], "venues": [{"id": "v-brignanese", "name": "Brignanese C · C.S. Comunale", "address": "Via Olimpia, Brignano Gera d'Adda (BG)", "notes": "Campo 1208 · sabato ore 10:00", "team": "BRIGNANESE C", "time": "10:00", "example": false}, {"id": "v-calvenzano", "name": "Or. Calvenzano · C.S. Comunale", "address": "Via dei Tigli, Calvenzano (BG)", "notes": "Campo 2494 · sabato ore 09:45", "team": "OR. CALVENZANO", "time": "09:45", "example": false}, {"id": "v-arcene", "name": "Or. Arcenebrignano · Centro Sport. Parrocchiale", "address": "Via San Giovanni Bosco 8, Arcene (BG)", "notes": "Campo 477 · sabato ore 10:00", "team": "OR. ARCENEBRIGNANO", "time": "10:00", "example": false}, {"id": "v-lurano", "name": "Or. Pro Lurano · C.S. Com. \"Frumenzio Scaravaggi\"", "address": "Via Papa Giovanni XXIII, Lurano (BG)", "notes": "Campo 765 · sabato ore 15:00", "team": "OR. PRO LURANO", "time": "15:00", "example": false}, {"id": "v-caravaggio", "name": "Caravaggio · C.S. Comunale campo n.2", "address": "Via G. Castoldi 11, Caravaggio (BG)", "notes": "Campo 370 · sabato ore 10:00", "team": "CARAVAGGIO", "time": "10:00", "example": false}, {"id": "v-zanconti", "name": "Zanconti 2022 · Oratorio \"S. Agostino\" n.1", "address": "Via San Giovanni Bosco, Treviglio (BG)", "notes": "Campo 801 · sabato ore 14:30", "team": "ZANCONTI 2022", "time": "14:30", "example": false}, {"id": "v-trevigliese", "name": "Trevigliese B · Stadio Comunale \"M. Zanconti\"", "address": "Via Milano 7, Treviglio (BG)", "notes": "Campo 283 · sabato ore 10:00", "team": "TREVIGLIESE B", "time": "10:00", "example": false}, {"id": "v-accademia", "name": "Accademia PBC · Campo Comunale n.2", "address": "Via Armando Diaz 22, Pontirolo Nuovo (BG)", "notes": "Campo 2338 · sabato ore 14:30", "team": "ACCADEMIA PBC", "time": "14:30", "example": false}, {"id": "v-ciserano", "name": "VirtusCiseranoBG · C.S. Comunale campo n.2", "address": "Via Mazzini 13, Ciserano (BG)", "notes": "Campo 809 · DOMENICA ore 11:00", "team": "VIRTUSCISERANOBG", "time": "11:00", "example": false}, {"id": "v-casirate", "name": "Libertas Casiratese · C.S. Comunale", "address": "Via Cimitero 7, Casirate d'Adda (BG)", "notes": "Campo 7690 · sabato ore 10:00", "team": "LIBERTAS CASIRATESE", "time": "10:00", "example": false}], "matches": [], "girone": {"name": "Primi Calci 7-8 anni 5v5 · Girone K", "source": "Comunicato N.16 del 01/10/26 - Delegazione di Bergamo", "myTeam": "", "teams": ["ACCADEMIA PBC", "BRIGNANESE C", "CARAVAGGIO", "LIBERTAS CASIRATESE", "OR. ARCENEBRIGNANO", "OR. CALVENZANO", "OR. PRO LURANO", "TREVIGLIESE B", "VIRTUSCISERANOBG", "ZANCONTI 2022"], "giornate": [{"n": 1, "date": "2026-10-03", "fixtures": [["CARAVAGGIO", "OR. PRO LURANO"], ["ZANCONTI 2022", "OR. ARCENEBRIGNANO"], ["TREVIGLIESE B", "LIBERTAS CASIRATESE"], ["ACCADEMIA PBC", "BRIGNANESE C"], ["VIRTUSCISERANOBG", "OR. CALVENZANO"]]}, {"n": 2, "date": "2026-10-10", "fixtures": [["BRIGNANESE C", "VIRTUSCISERANOBG"], ["LIBERTAS CASIRATESE", "ACCADEMIA PBC"], ["OR. ARCENEBRIGNANO", "TREVIGLIESE B"], ["OR. PRO LURANO", "ZANCONTI 2022"], ["OR. CALVENZANO", "CARAVAGGIO"]]}, {"n": 3, "date": "2026-10-17", "fixtures": [["ZANCONTI 2022", "CARAVAGGIO"], ["TREVIGLIESE B", "OR. PRO LURANO"], ["ACCADEMIA PBC", "OR. ARCENEBRIGNANO"], ["VIRTUSCISERANOBG", "LIBERTAS CASIRATESE"], ["OR. CALVENZANO", "BRIGNANESE C"]]}, {"n": 4, "date": "2026-10-24", "fixtures": [["LIBERTAS CASIRATESE", "BRIGNANESE C"], ["OR. ARCENEBRIGNANO", "VIRTUSCISERANOBG"], ["OR. PRO LURANO", "ACCADEMIA PBC"], ["CARAVAGGIO", "TREVIGLIESE B"], ["ZANCONTI 2022", "OR. CALVENZANO"]]}, {"n": 5, "date": "2026-10-31", "fixtures": [["TREVIGLIESE B", "ZANCONTI 2022"], ["ACCADEMIA PBC", "CARAVAGGIO"], ["VIRTUSCISERANOBG", "OR. PRO LURANO"], ["BRIGNANESE C", "OR. ARCENEBRIGNANO"], ["OR. CALVENZANO", "LIBERTAS CASIRATESE"]]}, {"n": 6, "date": "2026-11-07", "fixtures": [["OR. ARCENEBRIGNANO", "LIBERTAS CASIRATESE"], ["OR. PRO LURANO", "BRIGNANESE C"], ["CARAVAGGIO", "VIRTUSCISERANOBG"], ["ZANCONTI 2022", "ACCADEMIA PBC"], ["TREVIGLIESE B", "OR. CALVENZANO"]]}, {"n": 7, "date": "2026-11-14", "fixtures": [["ACCADEMIA PBC", "TREVIGLIESE B"], ["VIRTUSCISERANOBG", "ZANCONTI 2022"], ["BRIGNANESE C", "CARAVAGGIO"], ["LIBERTAS CASIRATESE", "OR. PRO LURANO"], ["OR. CALVENZANO", "OR. ARCENEBRIGNANO"]]}, {"n": 8, "date": "2026-11-21", "fixtures": [["OR. PRO LURANO", "OR. ARCENEBRIGNANO"], ["CARAVAGGIO", "LIBERTAS CASIRATESE"], ["ZANCONTI 2022", "BRIGNANESE C"], ["TREVIGLIESE B", "VIRTUSCISERANOBG"], ["ACCADEMIA PBC", "OR. CALVENZANO"]]}, {"n": 9, "date": "2026-11-28", "fixtures": [["VIRTUSCISERANOBG", "ACCADEMIA PBC"], ["BRIGNANESE C", "TREVIGLIESE B"], ["LIBERTAS CASIRATESE", "ZANCONTI 2022"], ["OR. ARCENEBRIGNANO", "CARAVAGGIO"], ["OR. CALVENZANO", "OR. PRO LURANO"]]}]}};
+const S={players:[],matches:[],venues:[]};
+let db=null, loaded=false, tab='partite', openMatch=null, G=null;
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const tc=s=>String(s||'').toLowerCase().replace(/(^|[\s.'(-])([a-zà-ù])/g,(m,a,b)=>a+b.toUpperCase());
+function addDay(iso,n){const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function saveGirone(patch){G={...G,...patch};if(db){db.doc('girone/k').update(patch).catch(()=>toast('Salvataggio non riuscito. Riprova.'))}else lsSave();render()}
+function applyTeam(team){
+  if(!G||!team)return;const today=todayStr();
+  (G.giornate||[]).forEach(g=>{
+    const f=(g.fixtures||[]).find(x=>x[0]===team||x[1]===team);if(!f)return;
+    const home=f[0]===team,opp=home?f[1]:f[0];
+    const v=S.venues.find(x=>x.team===f[0]);
+    const date=f[0]==='VIRTUSCISERANOBG'?addDay(g.date,1):g.date;
+    const id='g'+g.n;const old=S.matches.find(x=>x.id===id);
+    const base=old||{convocati:date===today?S.players.map(p=>p.id):[],played:{},onField:{},clock:{base:0,running:false,startedAt:0},meet:'',notes:'',gf:'',gs:''};
+    put('matches',{...base,id,giornata:g.n,opponent:tc(opp),date,time:(v&&v.time)||'',home,venueId:v?v.id:'',address:'',category:'Primi Calci · Girone K',example:false});
+  });
+  saveGirone({myTeam:team});
+  const t=S.matches.find(m=>m.date===todayStr()||m.date===addDay(todayStr(),1));
+  if(t){openMatch=t.id;render();scrollTo(0,0)}
+  toast('Calendario caricato: '+(G.giornate||[]).length+' giornate');
+}
+const LS='distinta-squadra-v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const byNum=(a,b)=>(+a.number||999)-(+b.number||999)||String(a.name).localeCompare(b.name);
+
+/* ---------- storage ---------- */
+function lsLoad(){let d=null;try{d=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
+  if(!d&&window.SEED)d=JSON.parse(JSON.stringify(window.SEED));
+  if(d){S.players=d.players||[];S.matches=d.matches||[];S.venues=d.venues||[];G=d.girone||null}}
+function lsSave(){try{const g=G?{...G}:null;if(g)delete g.changing;localStorage.setItem(LS,JSON.stringify({...S,girone:g}))}catch(e){}}
+const pend={};
+function queueWrite(col,id,body){
+  const k=col+'/'+id;const p=pend[k]||(pend[k]={busy:false,has:false,body:null});
+  p.body=body;p.has=true;if(!p.busy)flush(k,col,id);
+}
+/* auto-save: every change is written at once, failed writes retry by themselves, and a backup copy stays on the device */
+let saveFail=false;
+function saveState(){const busy=Object.values(pend).some(p=>p.busy||p.has);const el=$('#mode');if(!el)return;
+  if(!db){el.textContent='Salvato su questo dispositivo ✓';return}
+  el.textContent=saveFail?'Non salvato · riprovo da solo…':busy?'Salvataggio…':'Salvato ✓ '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  el.style.color=saveFail?'var(--warn)':''}
+async function flush(k,col,id){
+  const p=pend[k];p.busy=true;saveState();
+  while(p.has){const b=p.body;p.has=false;
+    try{const ref=db.collection(col).doc(id);b===null?await ref.delete():await ref.set(b);saveFail=false}
+    catch(e){
+      if(e&&e.code==='quota_exceeded'){toast('Spazio esaurito: elimina vecchie partite.');break}
+      saveFail=true;saveState();if(!p.has){p.has=true;p.body=b}await new Promise(r=>setTimeout(r,5000))}}
+  p.busy=false;saveState();
+}
+function put(col,obj){
+  const i=S[col].findIndex(x=>x.id===obj.id);if(i>=0)S[col][i]=obj;else S[col].push(obj);
+  if(db){const{id,...body}=obj;queueWrite(col,id,JSON.parse(JSON.stringify(body)))}
+  lsSave();render();
+}
+function remove(col,id){S[col]=S[col].filter(x=>x.id!==id);if(db)queueWrite(col,id,null);lsSave();render()}
+addEventListener('beforeunload',e=>{if(Object.values(pend).some(p=>p.busy||p.has)){e.preventDefault();e.returnValue=''}});
+
+/* ---------- helpers ---------- */
+const P=id=>S.players.find(p=>p.id===id);
+const V=id=>S.venues.find(v=>v.id===id);
+function fmtDate(d,opt){if(!d)return'';const x=new Date(d+'T12:00:00');return x.toLocaleDateString('it-IT',opt||{weekday:'long',day:'numeric',month:'long'})}
+function matchAddress(m){const v=V(m.venueId);return v?{name:v.name,address:v.address}:{name:'',address:m.address||''}}
+const mapsUrl=a=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a);
+function clockSec(m){const c=m.clock||{};return Math.max(0,(c.base||0)+(c.running?(Date.now()-c.startedAt)/1000:0))}
+function playedSec(m,pid){let s=(m.played||{})[pid]||0;const on=(m.onField||{})[pid];if(on!=null)s+=clockSec(m)-on;return Math.max(0,s)}
+function tempi(m){if(m.tempi)return m.tempi;const c=m.clock||{};return(c.base||c.running)?[{start:0,end:c.running?null:c.base}]:[]}
+function inTempo(m){const t=tempi(m);return t.length&&t[t.length-1].end==null?t.length:0}
+const golOf=m=>m.gol||[];
+const golBy=(m,pid)=>golOf(m).filter(g=>g.pid===pid).length;
+function score(m){if(m.gol||m.tempi)return{gf:golOf(m).length,gs:+m.gs||0};return{gf:m.gf??'',gs:m.gs??''}}
+const mmss=s=>{s=Math.floor(s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const mins=s=>Math.round(s/60);
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
+async function copy(text,el){try{await navigator.clipboard.writeText(text);toast('Copiato')}catch(e){if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast('Testo selezionato: copialo a mano')}}
+
+/* ---------- render ---------- */
+function render(){
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.tab===tab&&!openMatch)));
+  const y=new Date().getFullYear(),mo=new Date().getMonth();
+  $('#season').textContent='Stagione '+(mo>=7?y+'/'+String(y+1).slice(2):(y-1)+'/'+String(y).slice(2));
+  if(!loaded){$('#view').innerHTML='<p class="muted">Caricamento…</p>';return}
+  const v=$('#view');
+  if(openMatch){const m=S.matches.find(x=>x.id===openMatch);if(m){v.innerHTML=matchView(m);return}openMatch=null}
+  v.innerHTML=tab==='partite'?matchesView():tab==='rosa'?rosaView():tab==='campi'?campiView():minutiView();
+}
+
+function emptyBox(text,btns){return `<div class="empty"><p class="muted" style="margin:0">${text}</p><div class="row" style="justify-content:center">${btns}</div></div>`}
+
+function gironeBox(){
+  if(!G)return'';
+  if(!G.myTeam||G.changing)return `<div class="panel stack" style="margin-bottom:16px;border-color:var(--pitch)"><div><div class="eyebrow">Calendario caricato</div><div style="font-weight:700">${esc(G.name)}</div><div class="note">${(G.giornate||[]).length} giornate · ${esc(G.source||'')}</div></div>
+    <label class="f">Qual è la tua squadra?<select id="f-team"><option value="">Scegli…</option>${(G.teams||[]).map(t=>`<option value="${esc(t)}" ${t===G.myTeam?'selected':''}>${esc(tc(t))}</option>`).join('')}</select></label>
+    <div class="row"><button class="primary" data-act="applyTeam">Crea le partite</button>${G.changing?'<button data-act="cancelTeam">Annulla</button>':''}</div>
+    <p class="note" style="margin:0">Le partite già create mantengono convocati e minuti.</p></div>`;
+  return `<div class="spread note" style="margin-bottom:12px"><span>${esc(G.name)} · <b>${esc(tc(G.myTeam))}</b></span><button class="small ghost" data-act="changeTeam">Cambia squadra</button></div>`;
+}
+
+function matchesView(){
+  const today=todayStr();
+  const ms=[...S.matches].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const up=ms.filter(m=>(m.date||'9')>=today),past=ms.filter(m=>(m.date||'9')<today).reverse();
+  const card=m=>{const a=matchAddress(m);const d=m.date?new Date(m.date+'T12:00:00'):null;
+    const sc=score(m);const res=(sc.gf!==''&&sc.gs!=='')?` · ${esc(sc.gf)}–${esc(sc.gs)}`:'';
+    return `<button class="item" data-act="openMatch" data-id="${m.id}">
+      <div class="datebox"><b>${d?d.getDate():'–'}</b><span>${d?d.toLocaleDateString('it-IT',{month:'short'}):''}</span></div>
+      <div class="grow"><div class="row" style="gap:6px"><span class="chip ${m.home?'':'away'}">${m.home?'Casa':'Trasferta'}</span>${m.example?'<span class="chip ex">Esempio</span>':''}</div>
+      <div class="title">vs ${esc(m.opponent||'Avversario')}${res}</div>
+      <div class="sub">${m.time?'Ore '+esc(m.time):''}${m.meet?' · ritrovo '+esc(m.meet):''}${a.name||a.address?' · '+esc(a.name||a.address):''}</div>
+      <div class="sub">${(m.convocati||[]).length} convocati</div></div></button>`};
+  if(!S.matches.length)return `<div class="spread" style="margin-bottom:12px"><h2>Partite</h2></div>`+gironeBox()+(G?'':emptyBox('Nessuna partita. Crea la prima: avversario, data, campo e poi la convocazione.',`<button class="primary" data-act="newMatch">+ Nuova partita</button>${S.players.length?'':'<button data-act="seed">Carica esempio</button>'}`));
+  return `<div class="spread" style="margin-bottom:12px"><h2>Partite</h2><button class="primary" data-act="newMatch">+ Nuova</button></div>${gironeBox()}
+  <div class="section"><div class="eyebrow">Prossime</div><div class="list">${up.map(card).join('')||'<p class="muted">Nessuna partita in programma.</p>'}</div></div>
+  ${past.length?`<div class="section"><div class="eyebrow">Giocate</div><div class="list">${past.map(card).join('')}</div></div>`:''}`;
+}
+
+function rosaView(){
+  const ps=[...S.players].sort(byNum);
+  if(!ps.length)return `<div class="spread" style="margin-bottom:12px"><h2>Rosa</h2></div>`+emptyBox('Aggiungi i ragazzi della squadra con numero di maglia, ruolo e contatto del genitore.',`<button class="primary" data-act="newPlayer">+ Aggiungi ragazzo</button><button data-act="seed">Carica esempio</button>`);
+  return `<div class="spread" style="margin-bottom:12px"><h2>Rosa · ${ps.length}</h2><button class="primary" data-act="newPlayer">+ Aggiungi</button></div>
+  <div class="list">${ps.map(p=>`<button class="item" data-act="editPlayer" data-id="${p.id}"><span class="num">${esc(p.number||'–')}</span>
+    <div class="grow"><div class="title">${esc(p.name)} ${p.example?'<span class="chip ex">Esempio</span>':''}</div><div class="sub">${esc([p.year,p.role].filter(Boolean).join(' · '))}${p.parent?' · '+esc(p.parent):''}${p.phone?' · '+esc(p.phone):''}</div></div></button>`).join('')}</div>`;
+}
+
+function campiView(){
+  const vs=[...S.venues].sort((a,b)=>a.name.localeCompare(b.name));
+  if(!vs.length)return `<div class="spread" style="margin-bottom:12px"><h2>Campi</h2></div>`+emptyBox('Salva gli indirizzi dei campi: li scegli poi nella partita senza riscriverli.',`<button class="primary" data-act="newVenue">+ Aggiungi campo</button>`);
+  return `<div class="spread" style="margin-bottom:12px"><h2>Campi</h2><button class="primary" data-act="newVenue">+ Aggiungi</button></div>
+  <div class="list">${vs.map(v=>`<div class="item" style="cursor:default"><div class="grow"><div class="title">${esc(v.name)} ${v.example?'<span class="chip ex">Esempio</span>':''}</div><div class="sub">${esc(v.address)}</div>${v.notes?`<div class="sub">${esc(v.notes)}</div>`:''}</div>
+  <div class="row" style="gap:4px;flex-wrap:nowrap">${v.address?`<a class="btn small" href="${mapsUrl(v.address)}" target="_blank" rel="noopener">Mappa</a>`:''}<button class="small ghost" data-act="editVenue" data-id="${v.id}">Modifica</button></div></div>`).join('')}</div>`;
+}
+
+function minutiView(){
+  const ps=[...S.players].sort(byNum);
+  if(!ps.length)return `<h2 style="margin-bottom:12px">Statistiche</h2>`+emptyBox('Qui vedrai minuti e gol di ogni ragazzo, partita dopo partita.',`<button class="primary" data-act="tab" data-tab="rosa">Vai alla rosa</button>`);
+  const rows=ps.map(p=>{let conv=0,pres=0,sec=0,gol=0;S.matches.forEach(m=>{if((m.convocati||[]).includes(p.id))conv++;const s=playedSec(m,p.id);if(s>=30){pres++;sec+=s}gol+=golBy(m,p.id)});return{p,conv,pres,min:mins(sec),gol}});
+  const max=Math.max(1,...rows.map(r=>r.min));const withMin=rows.filter(r=>r.min>0);const avg=withMin.length?rows.reduce((a,r)=>a+r.min,0)/rows.length:0;
+  const done=S.matches.filter(m=>tempi(m).length||golOf(m).length||Object.keys(m.played||{}).length).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const perMatch=m=>{const sc=score(m);const t=tempi(m);
+    const kids=ps.filter(p=>(m.convocati||[]).includes(p.id)||playedSec(m,p.id)>0||golBy(m,p.id));
+    const og=golBy(m,'og');
+    const when=x=>[x.tempo?x.tempo+'° t.':'',x.min?x.min+'′':''].filter(Boolean).join(' ')||'—';
+    const golTimes=pid=>golOf(m).filter(x=>x.pid===pid).map(when).join(', ');
+    return `<details class="panel"><summary>${esc(fmtDate(m.date,{day:'numeric',month:'short'}))} · vs ${esc(m.opponent||'')} · ${esc(sc.gf)}–${esc(sc.gs)}${m.ended?'':' <span class="chip away">in corso</span>'}</summary>
+    ${t.length?`<div class="tempi" style="margin-top:8px">${t.map((x,i)=>`<span>${i+1}° tempo · ${x.end==null?'in corso':mmss(x.end-x.start)}</span>`).join('')}</div>`:''}
+    <div class="tablewrap"><table><thead><tr><th>Ragazzo</th><th>Minuti</th><th>Gol</th></tr></thead><tbody>
+    ${kids.map(p=>{const g=golBy(m,p.id);return `<tr><td>${esc(p.name)}</td><td>${mins(playedSec(m,p.id))}′</td><td>${g?`⚽ ${g}<div class="note">${esc(golTimes(p.id))}</div>`:'–'}</td></tr>`}).join('')}
+    ${og?`<tr><td class="muted">Autoreti a favore</td><td></td><td>${og}<div class="note">${esc(golTimes('og'))}</div></td></tr>`:''}
+    </tbody></table></div>
+    ${golOf(m).length?`<div class="eyebrow" style="margin-top:10px">Cronologia gol</div><div class="list" style="margin-top:6px">${golOf(m).map(x=>`<div class="spread"><span>⚽ ${esc(x.pid==='og'?'Autorete a favore':((P(x.pid)||{}).name||'—'))}</span><span class="note">${esc(when(x))}</span></div>`).join('')}</div>`:''}</details>`};
+  return `<div class="spread" style="margin-bottom:6px"><h2>Statistiche</h2><span class="note">media ${Math.round(avg)}′ a ragazzo</span></div>
+  <p class="note" style="margin:0 0 12px">In arancione chi è sotto la metà della media: utile per distribuire il tempo di gioco.</p>
+  <div class="panel tablewrap"><table><thead><tr><th>Ragazzo</th><th>Conv.</th><th>Pres.</th><th>Minuti</th><th>Media</th><th>Gol</th></tr></thead><tbody>
+  ${rows.map(r=>{const low=avg>0&&r.min<avg/2;return `<tr><td><b>${esc(r.p.number?r.p.number+' · ':'')}${esc(r.p.name)}</b><div class="bar ${low?'low':''}"><i style="width:${Math.round(r.min/max*100)}%"></i></div></td><td>${r.conv}</td><td>${r.pres}</td><td><b>${r.min}′</b></td><td>${r.pres?Math.round(r.min/r.pres)+'′':'–'}</td><td><b>${r.gol||'–'}</b></td></tr>`}).join('')}
+  </tbody></table></div>
+  <div class="section"><div class="eyebrow">Partita per partita</div>${done.length?`<div class="list">${done.map(perMatch).join('')}</div>`:'<p class="muted" style="margin:0">Ancora nessuna partita giocata con il cronometro.</p>'}</div>`;
+}
+
+function clockLabel(m){const t=tempi(m),n=inTempo(m),now=clockSec(m);
+  if(m.ended)return{eb:'Partita finita · '+t.length+(t.length===1?' tempo':' tempi'),big:mmss(now),small:'tempo totale giocato'};
+  if(n)return{eb:n+'° tempo · in corso',big:mmss(now-t[n-1].start),small:'totale '+mmss(now)};
+  if(t.length)return{eb:'Intervallo dopo il '+t.length+'° tempo',big:mmss(now),small:'tempo totale giocato'};
+  return{eb:'Da iniziare',big:'00:00',small:''}}
+
+function clockSection(m,convPs){const t=tempi(m),n=inTempo(m),L=clockLabel(m);
+  const btns=m.ended?`<button data-act="reopen">Riapri partita</button>`
+    :n?`<button data-act="endTempo">Fine ${n}° tempo</button>`
+    :`<button class="go" data-act="startTempo">${t.length?'Inizio '+(t.length+1)+'° tempo':'Fischio d\'inizio'}</button>${t.length?'<button data-act="endMatch">Fine partita</button>':''}`;
+  return `<div class="section"><div class="spread"><div class="eyebrow">Tempi di gioco</div>${t.length?`<button class="small ghost danger" data-act="resetClock">Azzera</button>`:''}</div>
+    <div class="clock"><div><div class="eyebrow" style="color:inherit;opacity:.7">${L.eb}</div><div class="t" id="clk">${L.big}</div><div class="sub2" id="clksub">${L.small}</div></div><div class="btns">${btns}</div></div>
+    ${t.length?`<div class="tempi">${t.map((x,i)=>`<span class="${x.end==null?'now':''}">${i+1}° tempo · ${x.end==null?'in corso':mmss(x.end-x.start)}</span>`).join('')}</div>`:''}
+    <p class="note" style="margin:0">Tocca <b>Entra</b> e <b>Esce</b> a ogni cambio: i minuti si sommano da soli e restano nelle statistiche. A fine tempo i bambini in campo restano segnati. Tocca i minuti per correggerli a mano.</p>
+    ${convPs.length?`<div class="list">${convPs.map(p=>{const on=(m.onField||{})[p.id]!=null;const g=golBy(m,p.id);return `<div class="player ${on?'in':''}"><span class="num">${esc(p.number||'–')}</span>
+      <div class="grow"><b>${esc(p.name)}</b><div class="goalrow"><button class="small" data-act="goal" data-id="${p.id}">+ Gol</button>${g?`<span class="ball">⚽ ${g}</span><button class="small ghost" data-act="ungoal" data-id="${p.id}" aria-label="Togli un gol a ${esc(p.name)}">−</button>`:''}</div></div>
+      <button class="ghost min" data-act="editMin" data-id="${p.id}" data-min="${p.id}">${mins(playedSec(m,p.id))}′</button>
+      ${m.ended?'':`<button class="small toggle" data-act="sub" data-id="${p.id}">${on?'Esce':'Entra'}</button>`}</div>`}).join('')}</div>`:'<p class="muted">Seleziona i convocati per gestire i tempi.</p>'}
+  </div>`;
+}
+
+function resultSection(m){const g=golOf(m);const name=id=>id==='og'?'Autorete a favore':((P(id)||{}).name||'—');
+  return `<div class="section"><div class="eyebrow">Risultato e marcatori</div>
+    <div class="panel stack"><div class="spread"><div><div class="eyebrow">Noi</div><div class="scorebig">${g.length}</div></div>
+      <div style="text-align:right"><div class="eyebrow">${esc(m.opponent||'Loro')}</div><div class="row" style="justify-content:flex-end;gap:6px"><button class="small" data-act="gsMinus" aria-label="Togli un gol agli avversari">−</button><span class="scorebig">${+m.gs||0}</span><button class="small" data-act="gsPlus" aria-label="Aggiungi un gol agli avversari">+</button></div></div></div>
+    ${g.length?`<div class="list">${g.map((x,i)=>`<div class="spread"><span>⚽ <b>${esc(name(x.pid))}</b> <span class="note">${x.tempo?x.tempo+'° tempo':''}${x.min?' · '+x.min+'′':''}</span></span><button class="small ghost danger" data-act="delGoal" data-i="${i}" aria-label="Togli questo gol">×</button></div>`).join('')}</div>`:'<p class="note" style="margin:0">Tocca <b>+ Gol</b> accanto al bambino che ha segnato.</p>'}
+    <button class="small" data-act="goal" data-id="og" style="justify-self:start">+ Autorete a favore</button></div>
+  </div>`;
+}
+
+function convText(m){
+  const a=matchAddress(m);const ps=(m.convocati||[]).map(P).filter(Boolean).sort(byNum);
+  let t=`CONVOCAZIONE${m.category?' '+m.category.toUpperCase():''}\n`;
+  t+=`${fmtDate(m.date)} · vs ${m.opponent||''} (${m.home?'in casa':'in trasferta'})\n`;
+  if(m.meet)t+=`Ritrovo: ore ${m.meet}\n`;if(m.time)t+=`Inizio partita: ore ${m.time}\n`;
+  if(a.name||a.address)t+=`Campo: ${[a.name,a.address].filter(Boolean).join(', ')}\n`;
+  if(a.address)t+=`Mappa: ${mapsUrl(a.address)}\n`;
+  t+=`\nConvocati (${ps.length}):\n`+ps.map((p,i)=>`${i+1}. ${p.name}${p.number?' ('+p.number+')':''}`).join('\n');
+  if(m.notes)t+=`\n\nNote: ${m.notes}`;
+  return t;
+}
+
+function matchView(m){
+  const a=matchAddress(m);const conv=m.convocati||[];const ps=[...S.players].sort(byNum);
+  const convPs=conv.map(P).filter(Boolean).sort(byNum);const c=m.clock||{};
+  return `<div class="spread"><button class="ghost" data-act="back">← Partite</button><button class="small" data-act="editMatch" data-id="${m.id}">Modifica</button></div>
+  <div style="margin-block:8px 4px" class="row"><span class="chip ${m.home?'':'away'}">${m.home?'Casa':'Trasferta'}</span>${m.category?`<span class="eyebrow">${esc(m.category)}</span>`:''}</div>
+  <h2 style="font-size:1.9rem">vs ${esc(m.opponent||'Avversario')}</h2>
+  <p class="muted" style="margin:2px 0 0">${esc(fmtDate(m.date))}${m.time?' · ore '+esc(m.time):''}${m.meet?' · ritrovo '+esc(m.meet):''}</p>
+
+  <div class="section"><div class="spread"><div class="eyebrow">Indirizzo</div></div>
+    ${a.address||a.name?`<div class="panel"><div class="title" style="font-weight:700">${esc(a.name||'Campo')}</div><div class="muted" style="overflow-wrap:anywhere">${esc(a.address)}</div>
+    <div class="row" style="margin-top:10px">${a.address?`<a class="btn small primary" href="${mapsUrl(a.address)}" target="_blank" rel="noopener">Apri in Maps</a><button class="small" data-act="copyAddr">Copia indirizzo</button>`:''}</div></div>`
+    :`<p class="muted">Nessun indirizzo. <button class="small" data-act="editMatch" data-id="${m.id}">Aggiungi campo</button></p>`}
+  </div>
+
+  <div class="section"><div class="spread"><div class="eyebrow">Convocazione · ${conv.length}/${ps.length}</div>
+    <div class="row" style="gap:4px"><button class="small ghost" data-act="convAll">Tutti</button><button class="small ghost" data-act="convNone">Nessuno</button></div></div>
+    ${ps.length?`<div class="grid2">${ps.map(p=>{const on=conv.includes(p.id);return `<label class="check ${on?'on':''}"><input type="checkbox" id="cv-${p.id}" data-act="conv" data-id="${p.id}" ${on?'checked':''}><span class="num" style="width:28px;height:28px;font-size:1rem">${esc(p.number||'–')}</span><span>${esc(p.name)}</span></label>`}).join('')}</div>
+    ${conv.length?`<details><summary style="cursor:pointer;font-weight:600;padding-block:6px">Messaggio per il gruppo genitori</summary><pre class="msg" id="convmsg">${esc(convText(m))}</pre><div class="row" style="margin-top:8px"><button class="primary small" data-act="copyConv">Copia messaggio</button></div></details>`:''}`
+    :`<p class="muted">Prima aggiungi i ragazzi nella <button class="small" data-act="tab" data-tab="rosa">Rosa</button></p>`}
+  </div>
+
+  ${clockSection(m,convPs)}
+
+  ${(()=>{const g=G&&m.giornata&&(G.giornate||[]).find(x=>x.n===m.giornata);if(!g)return'';
+    return `<div class="section"><div class="eyebrow">${g.n}ª giornata · tutte le partite del girone</div><div class="panel" style="padding:4px 14px">${g.fixtures.map(f=>{const our=f.includes(G.myTeam);const v=S.venues.find(x=>x.team===f[0]);
+      return `<div class="spread" style="padding-block:8px;border-bottom:1px solid var(--line);${our?'font-weight:700;color:var(--pitch)':''}"><span>${esc(tc(f[0]))} – ${esc(tc(f[1]))}</span><span class="note">${v&&v.time?esc(v.time):''}</span></div>`}).join('')}</div></div>`})()}
+
+  ${resultSection(m)}
+  <div class="row" style="margin-top:24px"><button class="ghost danger small" data-act="delMatch">Elimina partita</button></div>`;
+}
+
+/* ---------- modals ---------- */
+function openModal(html){$('#modal').innerHTML=`<div class="overlay" data-act="closeBg"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;const f=$('#modal input,#modal select');if(f)f.focus()}
+function closeModal(){$('#modal').innerHTML=''}
+const field=(id,label,val,type='text',extra='')=>`<label class="f">${label}<input id="${id}" type="${type}" value="${esc(val??'')}" ${extra}></label>`;
+
+function playerForm(p){p=p||{};openModal(`<form class="stack" data-form="player" data-id="${p.id||''}"><h2>${p.id?'Modifica ragazzo':'Nuovo ragazzo'}</h2>
+  ${field('f-name','Nome e cognome',p.name,'text','required')}
+  <div class="grid2">${field('f-number','Numero maglia',p.number,'text','inputmode="numeric"')}${field('f-year','Anno di nascita',p.year,'text','inputmode="numeric"')}
+  <label class="f">Ruolo<select id="f-role">${['','Portiere','Difensore','Centrocampista','Attaccante'].map(r=>`<option ${r===(p.role||'')?'selected':''}>${r}</option>`).join('')}</select></label></div>
+  <div class="grid2">${field('f-parent','Genitore',p.parent)}${field('f-phone','Telefono',p.phone,'tel')}</div>
+  <div class="spread"><div>${p.id?`<button type="button" class="ghost danger" data-act="delPlayer" data-id="${p.id}">Elimina</button>`:''}</div><div class="row"><button type="button" data-act="close">Annulla</button><button class="primary">Salva</button></div></div></form>`)}
+
+function venueForm(v){v=v||{};openModal(`<form class="stack" data-form="venue" data-id="${v.id||''}"><h2>${v.id?'Modifica campo':'Nuovo campo'}</h2>
+  ${field('f-vname','Nome del campo',v.name,'text','required placeholder="Es. Comunale San Rocco"')}
+  ${field('f-vaddr','Indirizzo',v.address,'text','placeholder="Via, numero, città"')}
+  <label class="f">Note<textarea id="f-vnotes" placeholder="Parcheggio, spogliatoi, scarpe da sintetico…">${esc(v.notes||'')}</textarea></label>
+  <div class="spread"><div>${v.id?`<button type="button" class="ghost danger" data-act="delVenue" data-id="${v.id}">Elimina</button>`:''}</div><div class="row"><button type="button" data-act="close">Annulla</button><button class="primary">Salva</button></div></div></form>`)}
+
+function matchForm(m){m=m||{home:true};const last=[...S.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  openModal(`<form class="stack" data-form="match" data-id="${m.id||''}"><h2>${m.id?'Modifica partita':'Nuova partita'}</h2>
+  ${field('f-opp','Avversario',m.opponent,'text','required')}
+  <div class="grid2">${field('f-date','Data',m.date,'date','required')}${field('f-cat','Categoria / campionato',m.category??(last&&last.category)??'','text','placeholder="Es. Under 12"')}</div>
+  <div class="grid2">${field('f-meet','Ritrovo',m.meet,'time')}${field('f-time','Inizio partita',m.time,'time')}</div>
+  <label class="f">Dove si gioca<select id="f-home"><option value="1" ${m.home?'selected':''}>In casa</option><option value="0" ${m.home?'':'selected'}>In trasferta</option></select></label>
+  <label class="f">Campo salvato<select id="f-venue"><option value="">— indirizzo libero —</option>${[...S.venues].sort((a,b)=>a.name.localeCompare(b.name)).map(v=>`<option value="${v.id}" ${v.id===m.venueId?'selected':''}>${esc(v.name)}</option>`).join('')}</select></label>
+  ${field('f-addr','Oppure indirizzo libero',m.venueId?'':m.address,'text','placeholder="Via, numero, città"')}
+  <label class="row note" style="gap:8px"><input type="checkbox" id="f-savevenue" style="width:18px;height:18px"> Salva l'indirizzo libero tra i campi</label>
+  <label class="f">Note per i genitori<textarea id="f-notes" placeholder="Divisa, borraccia, documento…">${esc(m.notes||'')}</textarea></label>
+  <div class="row" style="justify-content:flex-end"><button type="button" data-act="close">Annulla</button><button class="primary">Salva</button></div></form>`)}
+
+function minForm(m,p){openModal(`<form class="stack" data-form="min" data-id="${p.id}"><h2>Minuti di ${esc(p.name)}</h2>
+  ${field('f-min','Minuti giocati',mins(playedSec(m,p.id)),'number','min="0" max="200"')}
+  <p class="note" style="margin:0">Se il ragazzo è in campo ora, viene fatto uscire e i minuti restano quelli inseriti.</p>
+  <div class="row" style="justify-content:flex-end"><button type="button" data-act="close">Annulla</button><button class="primary">Salva</button></div></form>`)}
+
+/* ---------- actions ---------- */
+const val=id=>($('#'+id)?.value??'').trim();
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();const id=f.dataset.id;
+  if(f.dataset.form==='player'){const old=P(id)||{};put('players',{...old,id:id||uid(),name:val('f-name'),number:val('f-number'),year:val('f-year'),role:val('f-role'),parent:val('f-parent'),phone:val('f-phone'),example:false})}
+  if(f.dataset.form==='venue'){const old=V(id)||{};put('venues',{...old,id:id||uid(),name:val('f-vname'),address:val('f-vaddr'),notes:val('f-vnotes'),example:false})}
+  if(f.dataset.form==='match'){const old=S.matches.find(x=>x.id===id)||{convocati:[],played:{},onField:{},clock:{base:0,running:false,startedAt:0}};
+    let venueId=val('f-venue'),address=val('f-addr');
+    if(!venueId&&address&&$('#f-savevenue').checked){venueId=uid();put('venues',{id:venueId,name:address.split(',')[0],address,notes:''})}
+    const m={...old,id:id||uid(),opponent:val('f-opp'),date:val('f-date'),category:val('f-cat'),meet:val('f-meet'),time:val('f-time'),home:val('f-home')==='1',venueId,address:venueId?'':address,notes:val('f-notes'),example:false};
+    openMatch=m.id;put('matches',m)}
+  if(f.dataset.form==='min'){const m=S.matches.find(x=>x.id===openMatch);if(m){const onField={...(m.onField||{})};delete onField[id];put('matches',{...m,onField,played:{...(m.played||{}),[id]:Math.max(0,+val('f-min')||0)*60}})}}
+  closeModal();
+});
+
+document.addEventListener('change',e=>{
+  const t=e.target;if(t.dataset.act!=='conv')return;
+  const m=S.matches.find(x=>x.id===openMatch);if(!m)return;
+  const set=new Set(m.convocati||[]);t.checked?set.add(t.dataset.id):set.delete(t.dataset.id);
+  put('matches',{...m,convocati:[...set]});
+});
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el||el.dataset.act==='conv')return;
+  const act=el.dataset.act,id=el.dataset.id;
+  if(act==='closeBg'){if(e.target===el)closeModal();return}
+  const m=S.matches.find(x=>x.id===openMatch);
+  switch(act){
+    case 'tab':tab=el.dataset.tab;openMatch=null;render();scrollTo(0,0);break;
+    case 'close':closeModal();break;
+    case 'newPlayer':playerForm();break;
+    case 'editPlayer':playerForm(P(id));break;
+    case 'delPlayer':if(el.dataset.sure){remove('players',id);closeModal()}else{el.dataset.sure='1';el.textContent='Conferma eliminazione'}break;
+    case 'newVenue':venueForm();break;
+    case 'editVenue':venueForm(V(id));break;
+    case 'delVenue':if(el.dataset.sure){remove('venues',id);closeModal()}else{el.dataset.sure='1';el.textContent='Conferma eliminazione'}break;
+    case 'newMatch':matchForm();break;
+    case 'editMatch':matchForm(S.matches.find(x=>x.id===id));break;
+    case 'openMatch':openMatch=id;render();scrollTo(0,0);break;
+    case 'back':openMatch=null;tab='partite';render();break;
+    case 'delMatch':if(el.dataset.sure){remove('matches',m.id);openMatch=null;render()}else{el.dataset.sure='1';el.textContent='Tocca ancora per eliminare'}break;
+    case 'convAll':put('matches',{...m,convocati:S.players.map(p=>p.id)});break;
+    case 'convNone':put('matches',{...m,convocati:[]});break;
+    case 'copyConv':copy(convText(m),$('#convmsg'));break;
+    case 'copyAddr':{const a=matchAddress(m);copy([a.name,a.address].filter(Boolean).join(', '));break}
+    case 'startTempo':{const now=clockSec(m);put('matches',{...m,tempi:[...tempi(m),{start:now,end:null}],clock:{base:now,running:true,startedAt:Date.now()},ended:false});break}
+    case 'endTempo':{const now=clockSec(m);put('matches',{...m,tempi:tempi(m).map(x=>x.end==null?{...x,end:now}:x),clock:{base:now,running:false,startedAt:0}});break}
+    case 'endMatch':{const now=clockSec(m);const played={...(m.played||{})};
+      Object.entries(m.onField||{}).forEach(([pid,on])=>{played[pid]=(played[pid]||0)+Math.max(0,now-on)});
+      put('matches',{...m,played,onField:{},ended:true,gol:golOf(m),gf:String(golOf(m).length),gs:String(+m.gs||0)});toast('Partita finita: minuti e gol salvati nelle statistiche');break}
+    case 'reopen':put('matches',{...m,ended:false});break;
+    case 'resetClock':if(el.dataset.sure){put('matches',{...m,clock:{base:0,running:false,startedAt:0},tempi:[],ended:false,onField:{},played:{}})}else{el.dataset.sure='1';el.textContent='Azzera tempi e minuti?'}break;
+    case 'goal':{const t=tempi(m),n=inTempo(m);const min=n?Math.floor((clockSec(m)-t[n-1].start)/60)+1:null;
+      const gol=[...golOf(m),{pid:id,tempo:n||null,min}];put('matches',{...m,gol,gf:String(gol.length),gs:String(+m.gs||0)});toast('Gol! ⚽');break}
+    case 'ungoal':{const g=[...golOf(m)];for(let i=g.length-1;i>=0;i--)if(g[i].pid===id){g.splice(i,1);break}put('matches',{...m,gol:g,gf:String(g.length)});break}
+    case 'delGoal':{const g=golOf(m).filter((x,i)=>i!==+el.dataset.i);put('matches',{...m,gol:g,gf:String(g.length)});break}
+    case 'gsPlus':put('matches',{...m,gol:golOf(m),gs:String((+m.gs||0)+1)});break;
+    case 'gsMinus':put('matches',{...m,gol:golOf(m),gs:String(Math.max(0,(+m.gs||0)-1))});break;
+    case 'sub':{const onField={...(m.onField||{})},played={...(m.played||{})};const now=clockSec(m);
+      if(onField[id]!=null){played[id]=(played[id]||0)+Math.max(0,now-onField[id]);delete onField[id]}else onField[id]=now;
+      put('matches',{...m,onField,played});break}
+    case 'editMin':minForm(m,P(id));break;
+    case 'saveScore':put('matches',{...m,gf:val('gf'),gs:val('gs')});toast('Risultato salvato');break;
+    case 'seed':seed();break;
+    case 'applyTeam':{const t=val('f-team');if(!t){toast('Scegli prima la squadra');break}if(G.changing)G={...G,changing:false};applyTeam(t);break}
+    case 'changeTeam':G={...G,changing:true};render();break;
+    case 'cancelTeam':G={...G,changing:false};render();break;
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){tab=b.dataset.tab;openMatch=null;render();scrollTo(0,0)}});
+
+setInterval(()=>{if(!openMatch)return;const m=S.matches.find(x=>x.id===openMatch);if(!m||!(m.clock||{}).running)return;
+  const L=clockLabel(m);const c=$('#clk');if(c)c.textContent=L.big;const cs=$('#clksub');if(cs)cs.textContent=L.small;
+  document.querySelectorAll('[data-min]').forEach(b=>b.textContent=mins(playedSec(m,b.dataset.min))+'′')},1000);
+
+function seed(){
+  const names=[['Luca Bianchi','1','Portiere'],['Matteo Rossi','2','Difensore'],['Andrea Conti','4','Difensore'],['Giulio Ferri','5','Difensore'],['Tommaso Galli','6','Centrocampista'],['Davide Marino','8','Centrocampista'],['Samuele Greco','10','Centrocampista'],['Filippo Costa','7','Attaccante'],['Riccardo Lombardi','9','Attaccante'],['Edoardo Fontana','11','Attaccante']];
+  const ids=names.map(([name,number,role])=>{const id=uid();put('players',{id,name,number,role,parent:'',phone:'',example:true});return id});
+  const vid=uid();put('venues',{id:vid,name:'Campo Comunale (esempio)',address:'Via dello Sport 1, Roma',notes:'Parcheggio dietro la tribuna',example:true});
+  const d=new Date();d.setDate(d.getDate()+((7-d.getDay())%7||7));
+  put('matches',{id:uid(),opponent:'Polisportiva Esempio',date:d.toISOString().slice(0,10),time:'10:30',meet:'09:30',category:'Under 12',home:true,venueId:vid,address:'',notes:'Divisa da gioco e borraccia',convocati:ids.slice(0,9),played:{},onField:{},clock:{base:0,running:false,startedAt:0},example:true});
+  toast('Dati di esempio caricati: modificali o eliminali');
+}
+
+/* ---------- boot ---------- */
+render();
+(async()=>{
+  try{db=window.claude&&window.claude.use?await window.claude.use('db'):null}catch(e){db=null}
+  if(!db){lsLoad();loaded=true;saveState();render();return}
+  saveState();
+  const got={};const done=()=>{if(got.players&&got.matches&&got.venues&&got.girone)loaded=true;render()};
+  ['players','matches','venues'].forEach(col=>{
+    db.collection(col).onSnapshot(snap=>{
+      S[col]=snap.docs.map(d=>({id:d.id,...d.data()}));got[col]=true;done();
+    },err=>{toast('Collegamento ai dati interrotto. Ricarica la pagina.')});
+  });
+  db.doc('girone/k').onSnapshot(snap=>{const ch=G&&G.changing;G=snap.exists?{...snap.data(),changing:ch}:null;got.girone=true;done()},()=>{got.girone=true;done()});
+})();
+</script>
+
+</body></html>
